@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://localhost:4040/api/v1";
+const API_BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 export const API_ENDPOINTS = {
   auth: {
@@ -12,7 +12,7 @@ export const API_ENDPOINTS = {
   },
   user: {
     me: `${API_BASE_URL}/user/me`,
-    all:`${API_BASE_URL}/user/all`
+    all: `${API_BASE_URL}/user/all`,
   },
   vehicles: {
     add: `${API_BASE_URL}/vehicles`,
@@ -32,14 +32,12 @@ export const API_ENDPOINTS = {
     delete: (id: string) => `${API_BASE_URL}/vehicle-models/${id}`,
     search: `${API_BASE_URL}/vehicle-models/search`,
   },
- actions: {
-  makeAction:`${API_BASE_URL}/actions`,
-  getAllActions: `${API_BASE_URL}/actions`,
-  deleteAction:(id:string)=>`${API_BASE_URL}/actions/${id}`,
-  updateAction:(id:string)=>`${API_BASE_URL}/actions/${id}`
-
- }
+  actions: {
+    makeAction: `${API_BASE_URL}/actions`,
+    getAllActions: `${API_BASE_URL}/actions`,
+    deleteAction: (id: string) => `${API_BASE_URL}/actions/${id}`,
+    updateAction: (id: string) => `${API_BASE_URL}/actions/${id}`,
+  },
 };
-
 
 export default API_ENDPOINTS;

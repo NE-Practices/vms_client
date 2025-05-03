@@ -36,7 +36,7 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className="w-full bg-white text-black px-6 py-4 flex justify-between">
-      <span className="hidden sm:inline">Hello, {user?.names}</span>
+      <span className="hidden sm:inline">Hello</span>
 
       {user && (
         <div className="flex items-center space-x-4 justify-between">
@@ -49,6 +49,7 @@ const Navbar: React.FC = () => {
               </AvatarFallback>
             )}
           </Avatar>
+          <h1>{user.names}</h1>
         </div>
       )}
     </nav>

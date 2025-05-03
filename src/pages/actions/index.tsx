@@ -10,6 +10,7 @@ import DeleteConfirmModal from "../../components/modals/common/DeleteConfirmModa
 import { Button } from "../../components/ui/button";
 import { Action, deleteAction } from "../../services/actionService";
 import { toast } from "sonner";
+import Loader from "../../components/commons/loader";
 
 const ActionsPage: React.FC = () => {
   const [actions, setActions] = useState<Action[]>([]);
@@ -85,7 +86,7 @@ const ActionsPage: React.FC = () => {
       </div>
       {error && <p className="text-red-600 mb-4">{error}</p>}
       {loading ? (
-        <p className="text-gray-500">Loading...</p>
+        <Loader/>
       ) : (
         <DataTable<Action>
           data={actions}

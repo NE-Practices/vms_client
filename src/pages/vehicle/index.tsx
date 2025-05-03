@@ -10,6 +10,7 @@ import CreateEditVehicle from "../../components/modals/vehicles/createEditVehicl
 import { Button } from "../../components/ui/button";
 import { deleteVehicle } from "../../services/vehiclesService";
 import { toast } from "sonner";
+import Loader from "../../components/commons/loader";
 
 const VehiclePage: React.FC = () => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
@@ -74,7 +75,7 @@ const VehiclePage: React.FC = () => {
       </div>
       {error && <p className="text-red-600 mb-4">{error}</p>}
       {loading ? (
-        <p className="text-gray-500">Loading...</p>
+       <Loader/>
       ) : (
         <DataTable<Vehicle>
           data={vehicles}

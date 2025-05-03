@@ -19,10 +19,10 @@ export interface Vehicle {
 export const vehicleModelColumns = (
   onEdit: (model: VehicleModel) => void
 ): ColumnDef<VehicleModel>[] => [
-  {
-    accessorKey: "id",
-    header: "ID",
-  },
+  // {
+  //   accessorKey: "id",
+  //   header: "ID",
+  // },
   {
     accessorKey: "name",
     header: "Name",
@@ -36,10 +36,10 @@ export const vehicleModelColumns = (
 export const vehicleColumns = (
   onEdit: (vehicle: Vehicle) => void
 ): ColumnDef<Vehicle>[] => [
-  {
-    accessorKey: "id",
-    header: "ID",
-  },
+  // {
+  //   accessorKey: "id",
+  //   header: "ID",
+  // },
   {
     accessorKey: "plateNumber",
     header: "Plate Number",
@@ -65,14 +65,24 @@ export const actionColumns = (
   onEdit: (action: Action) => void
 ): ColumnDef<Action>[] => [
   {
-    accessorKey: "vehicleId",
-    header: "Vehicle ID",
+    accessorKey: "vehicle.plateNumber",
+    header: "Vehicle plateNumber",
     cell: (info) => info.getValue(),
   },
   {
     accessorKey: "actionType",
-    header: "Action Type",
+    header: "User Action Type",
     cell: (info) => info.getValue(),
+  },
+  {
+    accessorKey:"user.names",
+    header:"User Name",
+    cell:(info)=>info.getValue(),
+  },
+  {
+    accessorKey:"user.telephone",
+    header:"Phone number",
+    cell:(info)=>info.getValue(),
   },
   // {
   //   id: "actions",

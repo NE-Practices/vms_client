@@ -24,7 +24,9 @@ export async function getAllActions() {
       },
     });
     toast.success("Actions loaded successfully!");
+    console.log("Actions data-->", response.data);
     return response.data;
+    
   } catch (error: unknown) {
     const errorMessage =
       axios.isAxiosError(error) && error.response?.data?.message

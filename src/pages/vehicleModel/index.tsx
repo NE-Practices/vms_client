@@ -8,6 +8,7 @@ import { deleteVehicleModel, getAllVehicleModels } from "../../services/vehicleM
 import CreateEditVehicleModel from "../../components/modals/vehicleModels/createEditVehicleModel"; 
 import { Button } from "../../components/ui/button";
 import { toast } from "sonner";
+import Loader from "../../components/commons/loader";
 
 
 
@@ -69,7 +70,7 @@ const VehicleModelPage: React.FC = () => {
 
       {error && <p className="text-red-600 mb-4">{error}</p>}
       {loading ? (
-        <p>Loading...</p>
+        <Loader/>
       ) : (
     <DataTable<VehicleModel>
   data={vehicleModels}
