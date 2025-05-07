@@ -84,16 +84,4 @@ export const actionColumns = (
     header:"Phone number",
     cell:(info)=>info.getValue(),
   },
-  // {
-  //   id: "actions",
-  //   header: "Actions",
-  //   cell: ({ row }) => (
-  //     <button
-  //       onClick={() => onEdit(row.original)}
-  //       className="text-blue-500 hover:underline"
-  //     >
-  //       Edit
-  //     </button>
-  //   ),
-  // },
 ];

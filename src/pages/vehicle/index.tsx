@@ -7,10 +7,12 @@ import {
 } from "../../components/tables/columns";
 import API_ENDPOINTS from "../../constants/api";
 import CreateEditVehicle from "../../components/modals/vehicles/createEditVehicle";
+import CreateEditAction from "../../components/modals/actions/createEditAction";
 import { Button } from "../../components/ui/button";
 import { deleteVehicle } from "../../services/vehiclesService";
 import { toast } from "sonner";
 import Loader from "../../components/commons/loader";
+import { Action } from "@/services/actionService";
 
 const VehiclePage: React.FC = () => {
   const [vehicles, setVehicles] = useState<Vehicle[]>([]);
@@ -18,6 +20,12 @@ const VehiclePage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
+
+  const [isActionDialogOpen, setIsActionDialogOpen] = useState(false);
+  const [selectedAction, setSelectedAction] = useState<Action | null>(null);
+  const user = localStorage.getItem("user");
+  const parsedUser = user ? JSON.parse(user) : {};
+  const UserRole = parsedUser.role?.toLowerCase();
 
   const fetchVehicles = async () => {
     setLoading(true);
@@ -46,20 +54,29 @@ const VehiclePage: React.FC = () => {
     setIsDialogOpen(true);
   };
 
-  const handleCreate = () => {
+  const handleCreateVehicle = () => {
     setSelectedVehicle(null);
     setIsDialogOpen(true);
+  };
+
+  const handleCreateAction = () => {
+    setSelectedAction(null);
+    setIsActionDialogOpen(true);
+  };
+
+  const handleDelete = async (vehicle: Vehicle) => {
+    try {
+      await deleteVehicle(vehicle.id);
+      toast.success("Vehicle deleted successfully");
+      fetchVehicles();
+    } catch {
+      toast.error("Failed to delete vehicle");
+    }
   };
 
   const handleSuccess = () => {
     fetchVehicles();
   };
-
-  const handleDelete = async (vehicle:Vehicle)=>{
-   await deleteVehicle(vehicle.id)
-   toast.success("Vehicle deleted successfully")
-   fetchVehicles()
-  }
 
   useEffect(() => {
     fetchVehicles();
@@ -69,26 +86,51 @@ const VehiclePage: React.FC = () => {
     <div className="p-4">
       <div>
         <h1 className="text-2xl font-semibold mb-4">Vehicles</h1>
-        <Button onClick={handleCreate} className="mb-4">
-          Create Vehicle
-        </Button>
+
+        {/* Admin Create Vehicle */}
+        {UserRole === "admin" && (
+          <Button onClick={handleCreateVehicle} className="mb-4 mr-2">
+            Create Vehicle
+          </Button>
+        )}
+
+        {/* User Create Action */}
+        {UserRole === "user" && (
+          <Button onClick={handleCreateAction} className="mb-4">
+            Create Action
+          </Button>
+        )}
       </div>
+
       {error && <p className="text-red-600 mb-4">{error}</p>}
+
       {loading ? (
-       <Loader/>
+        <Loader />
       ) : (
         <DataTable<Vehicle>
           data={vehicles}
           columns={getVehicleColumns(handleEdit)}
           onEdit={handleEdit}
           onDelete={handleDelete}
+          role={UserRole}
+          tableType="vehicle"
         />
       )}
+
+      {/* Vehicle Modal */}
       <CreateEditVehicle
         isOpen={isDialogOpen}
         vehicleToEdit={selectedVehicle}
         onOpenChange={setIsDialogOpen}
         onSuccess={handleSuccess}
+      />
+
+      {/* Action Modal for Users */}
+      <CreateEditAction
+        isOpen={isActionDialogOpen}
+        actionToEdit={selectedAction}
+        onOpenChange={setIsActionDialogOpen}
+        onSuccess={handleSuccess} // or optionally, fetchActions if available
       />
     </div>
   );

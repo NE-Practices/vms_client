@@ -16,10 +16,31 @@ import VehiclePage from "./pages/vehicle";
 import VehicleModelPage from "./pages/vehicleModel";
 import ActionsPage from "./pages/actions";
 import NotFoundPage from "./pages/404";
+import UnauthorizedPage from "./pages/404/unauthorized";
 
-const PrivateRoute: React.FC<{ children: ReactElement }> = ({ children }) => {
+const PrivateRoute: React.FC<{
+  children: ReactElement;
+  allowedRoles: string[];
+}> = ({ children, allowedRoles }) => {
   const token = localStorage.getItem("token");
-  return token ? children : <Navigate to="/auth/register" replace />;
+  const user = localStorage.getItem("user");
+
+  if (!token || !user) {
+    return <Navigate to="/auth/register" replace />;
+  }
+
+  try {
+    const parsedUser = JSON.parse(user);
+    const UserRole = parsedUser.role;
+
+    if (allowedRoles.includes(UserRole)) {
+      return children;
+    } else {
+      return <Navigate to="/dashboard/vehicles" replace />;
+    }
+  } catch {
+    return <Navigate to="/auth/register" replace />;
+  }
 };
 
 const PublicRoute: React.FC<{ children: ReactElement }> = ({ children }) => {
@@ -50,15 +71,44 @@ const App: React.FC = () => {
         <Route
           path="/dashboard/*"
           element={
-            <PrivateRoute>
+            <PrivateRoute allowedRoles={["ADMIN", "USER"]}>
               <DashboardLayout />
             </PrivateRoute>
           }
         >
-          <Route path="overview" element={<DashboardPage />} />
-          <Route path="vehicles" element={<VehiclePage />} />
-          <Route path="vehicleModels" element={<VehicleModelPage />} />
-          <Route path="actions" element={<ActionsPage />} />
+          <Route
+            path="overview"
+            element={
+              <PrivateRoute allowedRoles={["ADMIN"]}>
+                <DashboardPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="vehicles"
+            element={
+              <PrivateRoute allowedRoles={["ADMIN", "USER"]}>
+                <VehiclePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="vehicleModels"
+            element={
+              <PrivateRoute allowedRoles={["ADMIN"]}>
+                <VehicleModelPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="actions"
+            element={
+              <PrivateRoute allowedRoles={["ADMIN", "USER"]}>
+                <ActionsPage />
+              </PrivateRoute>
+            }
+          />
+          <Route path="unauthorized" element={<UnauthorizedPage />} />
         </Route>
 
         <Route path="*" element={<NotFoundPage />} />

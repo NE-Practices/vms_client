@@ -8,8 +8,6 @@ import {
   ColumnDef,
 } from "@tanstack/react-table";
 import {
-  ChevronLeft,
-  ChevronRight,
   MoreVertical,
   Edit,
   Trash2,
@@ -21,9 +19,11 @@ interface TableProps<T> {
   columns: ColumnDef<T>[];
   onEdit?: (row: T) => void;
   onDelete?: (row: T) => void;
+  role?: "admin" | "user";
+  tableType?: "vehicle" | "vehicleModel" | "action";
 }
 
-function DataTable<T>({ data, columns,onEdit,onDelete }: TableProps<T>) {
+function DataTable<T>({ data, columns,onEdit,onDelete,role,tableType }: TableProps<T>) {
   const [globalFilter, setGlobalFilter] = useState("");
   const [pageIndex, setPageIndex] = useState(0);
   const [pageSize, setPageSize] = useState(10);
@@ -64,7 +64,14 @@ function DataTable<T>({ data, columns,onEdit,onDelete }: TableProps<T>) {
           type="text"
           placeholder="Search..."
           value={globalFilter ?? ""}
-          onChange={(e) => setGlobalFilter(e.target.value)}
+          onChange={(e) => {
+            const sanitized = e.target.value.replace(/\s+/g, " ").trim(); 
+            if (sanitized !== "") {
+              setGlobalFilter(sanitized.toLowerCase());
+            } else {
+              setGlobalFilter("");
+            }
+          }}
           className="w-72 px-4 py-2 rounded-md border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
@@ -85,7 +92,11 @@ function DataTable<T>({ data, columns,onEdit,onDelete }: TableProps<T>) {
                         )}
                   </th>
                 ))}
-                <th className="px-5 py-3 text-left">Actions</th>
+                {((role === "admin" &&
+                  (tableType === "vehicle" || tableType === "vehicleModel")) ||
+                  (role === "user" && tableType === "action")) && (
+                  <th className="px-5 py-3 text-left">Actions</th>
+                )}
               </tr>
             ))}
           </thead>
@@ -103,46 +114,54 @@ function DataTable<T>({ data, columns,onEdit,onDelete }: TableProps<T>) {
                   </td>
                 ))}
 
-                <td className="px-5 py-4 relative">
-                  <button
-                    onClick={() => {
-                      setOpenRowId((prev) => (prev === row.id ? null : row.id));
-                    }}
-                    className="hover:bg-gray-200 rounded-full p-1"
-                  >
-                    <MoreVertical size={18} />
-                  </button>
+                {((role === "admin" &&
+                  (tableType === "vehicle" || tableType === "vehicleModel")) ||
+                  (role === "user" && tableType === "action")) && (
+                  <td className="px-5 py-4 relative">
+                    <button
+                      onClick={() => {
+                        setOpenRowId((prev) =>
+                          prev === row.id ? null : row.id
+                        );
+                      }}
+                      className="hover:bg-gray-200 rounded-full p-1"
+                    >
+                      <MoreVertical size={18} />
+                    </button>
 
-                  {openRowId === row.id && (
-                    <div className="absolute right-5 top-10 z-50 w-36 bg-white shadow-lg border rounded-md">
-                      <button
-                        className="w-full flex items-center px-4 py-2 hover:bg-gray-100 text-sm"
-                        onClick={() => {
-                          setOpenRowId(null);
-                          const rowData = row.original as T;
-                          if (rowData && onEdit) onEdit(rowData);
-                        }}
-                      >
-                        <Edit size={16} className="mr-2" />
-                        Edit
-                      </button>
-                      <button
-                        className="w-full flex items-center px-4 py-2 hover:bg-gray-100 text-sm text-red-600"
-                        onClick={() => {
-                          setOpenRowId(null);
-                          const rowData = row.original as T;
-                          if (rowData) {
-                            setRowToDelete(rowData);
-                            setIsDeleteModalOpen(true);
-                          }
-                        }}
-                      >
-                        <Trash2 size={16} className="mr-2" />
-                        Delete
-                      </button>
-                    </div>
-                  )}
-                </td>
+                    {openRowId === row.id && (
+                      <div className="absolute right-5 top-10 z-50 w-36 bg-white shadow-lg border rounded-md">
+                        {onEdit && (
+                          <button
+                            className="w-full flex items-center px-4 py-2 hover:bg-gray-100 text-sm"
+                            onClick={() => {
+                              setOpenRowId(null);
+                              const rowData = row.original as T;
+                              onEdit(rowData);
+                            }}
+                          >
+                            <Edit size={16} className="mr-2" />
+                            Edit
+                          </button>
+                        )}
+                        {onDelete && (
+                          <button
+                            className="w-full flex items-center px-4 py-2 hover:bg-gray-100 text-sm text-red-600"
+                            onClick={() => {
+                              setOpenRowId(null);
+                              const rowData = row.original as T;
+                              setRowToDelete(rowData);
+                              setIsDeleteModalOpen(true);
+                            }}
+                          >
+                            <Trash2 size={16} className="mr-2" />
+                            Delete
+                          </button>
+                        )}
+                      </div>
+                    )}
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
@@ -151,23 +170,25 @@ function DataTable<T>({ data, columns,onEdit,onDelete }: TableProps<T>) {
 
       {/* Pagination */}
       <div className="flex items-center justify-between text-sm text-gray-600">
-        <div className="space-x-2">
-          <button
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-            className="inline-flex items-center px-3 py-2 rounded-md border bg-white text-gray-700 border-gray-300 hover:bg-gray-100 disabled:opacity-50"
+        <div className="flex items-center gap-2">
+          <label htmlFor="pageSize" className="text-sm">
+            Rows per page:
+          </label>
+          <select
+            id="pageSize"
+            value={pageSize}
+            onChange={(e) => {
+              setPageSize(Number(e.target.value));
+              setPageIndex(0); // reset to first page
+            }}
+            className="border px-2 py-1 rounded-md text-sm"
           >
-            <ChevronLeft className="w-4 h-4 mr-1" />
-            Previous
-          </button>
-          <button
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-            className="inline-flex items-center px-3 py-2 rounded-md border bg-white text-gray-700 border-gray-300 hover:bg-gray-100 disabled:opacity-50"
-          >
-            Next
-            <ChevronRight className="w-4 h-4 ml-1" />
-          </button>
+            {[5, 10, 20, 50].map((size) => (
+              <option key={size} value={size}>
+                {size}
+              </option>
+            ))}
+          </select>
         </div>
 
         <span>
@@ -178,6 +199,7 @@ function DataTable<T>({ data, columns,onEdit,onDelete }: TableProps<T>) {
           </strong>
         </span>
       </div>
+
       {rowToDelete && (
         <DeleteConfirmModal
           isOpen={isDeleteModalOpen}

@@ -4,13 +4,14 @@ import {
   vehicleModelColumns,
   VehicleModel,
 } from "../../components/tables/columns";
-import { deleteVehicleModel, getAllVehicleModels } from "../../services/vehicleModelsService";
-import CreateEditVehicleModel from "../../components/modals/vehicleModels/createEditVehicleModel"; 
+import {
+  deleteVehicleModel,
+  getAllVehicleModels,
+} from "../../services/vehicleModelsService";
+import CreateEditVehicleModel from "../../components/modals/vehicleModels/createEditVehicleModel";
 import { Button } from "../../components/ui/button";
 import { toast } from "sonner";
 import Loader from "../../components/commons/loader";
-
-
 
 const VehicleModelPage: React.FC = () => {
   const [vehicleModels, setVehicleModels] = useState<VehicleModel[]>([]);
@@ -20,12 +21,16 @@ const VehicleModelPage: React.FC = () => {
   const [vehicleModelToEdit, setVehicleModelToEdit] =
     useState<VehicleModel | null>(null);
 
+  const user = localStorage.getItem("user");
+  const parsedUser = user ? JSON.parse(user) : {};
+  const UserRole = parsedUser.role.toLowerCase();
+
   const fetchVehicleModels = async () => {
     setLoading(true);
     setError(null);
     try {
       const response = await getAllVehicleModels();
-      const models = response?.data || response; 
+      const models = response?.data || response;
       setVehicleModels(models);
     } catch (err) {
       console.error(err);
@@ -38,7 +43,6 @@ const VehicleModelPage: React.FC = () => {
   useEffect(() => {
     fetchVehicleModels();
   }, []);
-
 
   const handleCreate = () => {
     setVehicleModelToEdit(null);
@@ -54,12 +58,11 @@ const VehicleModelPage: React.FC = () => {
     fetchVehicleModels();
   };
 
-  const handleDelete = async (model:VehicleModel) =>{
-       await deleteVehicleModel(model.id);
-       toast.success("Model deleted successfully");
-       fetchVehicleModels();
-  }
-
+  const handleDelete = async (model: VehicleModel) => {
+    await deleteVehicleModel(model.id);
+    toast.success("Model deleted successfully");
+    fetchVehicleModels();
+  };
 
   return (
     <div className="p-4">
@@ -70,15 +73,16 @@ const VehicleModelPage: React.FC = () => {
 
       {error && <p className="text-red-600 mb-4">{error}</p>}
       {loading ? (
-        <Loader/>
+        <Loader />
       ) : (
-    <DataTable<VehicleModel>
-  data={vehicleModels}
-  columns={vehicleModelColumns(handleEdit)}
-  onEdit={handleEdit}
-  onDelete={handleDelete}
-/>
-
+        <DataTable<VehicleModel>
+          data={vehicleModels}
+          columns={vehicleModelColumns(handleEdit)}
+          onEdit={handleEdit}
+          onDelete={handleDelete}
+          role={UserRole}
+          tableType="vehicleModel"
+        />
       )}
       <CreateEditVehicleModel
         isOpen={isDialogOpen}

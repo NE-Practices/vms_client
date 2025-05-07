@@ -42,6 +42,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ onLoginSuccess }) => {
       const result = response.data;
       if (result.data.token) {
         localStorage.setItem("token", result.data.token);
+        localStorage.setItem("user", JSON.stringify(result.data.user));
       }
       console.log("Login successful:", result.data.token);
 

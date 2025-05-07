@@ -7,7 +7,7 @@ export async function getAllUsers() {
   try {
     const response = await axios.get(API_ENDPOINTS.user.all, {
       headers: {
-        Authorization: localStorage.getItem("token"),
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
     toast.success("Users loaded successfully");

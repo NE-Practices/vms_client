@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import DataTable from "../../components/tables";
-import {
-  actionColumns as getActionColumns,
-} from "../../components/tables/columns";
+import { actionColumns as getActionColumns } from "../../components/tables/columns";
 import API_ENDPOINTS from "../../constants/api";
 import CreateEditAction from "../../components/modals/actions/createEditAction";
 import DeleteConfirmModal from "../../components/modals/common/DeleteConfirmModal";
@@ -19,6 +17,9 @@ const ActionsPage: React.FC = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [selectedAction, setSelectedAction] = useState<Action | null>(null);
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
+  const user = localStorage.getItem("user");
+  const parsedUser = user ? JSON.parse(user) : {};
+  const UserRole = parsedUser.role.toLowerCase();
 
   const fetchActions = async () => {
     setLoading(true);
@@ -79,20 +80,24 @@ const ActionsPage: React.FC = () => {
   return (
     <div className="p-4">
       <div>
-        <h1 className="text-2xl font-semibold mb-4">Actions</h1>
-        <Button onClick={handleCreate} className="mb-4">
-          Create Action
-        </Button>
+        <h1 className="text-2xl font-semibold mb-4">User Actions</h1>
+        {UserRole === "user" && (
+          <Button onClick={handleCreate} className="mb-4">
+            Create Action
+          </Button>
+        )}
       </div>
       {error && <p className="text-red-600 mb-4">{error}</p>}
       {loading ? (
-        <Loader/>
+        <Loader />
       ) : (
         <DataTable<Action>
           data={actions}
           columns={getActionColumns(handleEdit)}
           onEdit={handleEdit}
           onDelete={handleDelete}
+          tableType="action"
+          role={UserRole}
         />
       )}
       <CreateEditAction
