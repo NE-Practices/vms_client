@@ -143,7 +143,7 @@ const CreateEditVehicle: React.FC<CreateEditVehicleProps> = ({
               <SelectContent className="w-full">
                 {vehicleModels.map((vm) => (
                   <SelectItem key={vm.id} value={vm.id}>
-                    {vm.name}
+                    {vm.name} - {vm.brand}
                   </SelectItem>
                 ))}
               </SelectContent>

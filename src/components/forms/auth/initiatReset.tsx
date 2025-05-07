@@ -37,15 +37,31 @@ const InitiateResetForm: React.FC<InitiateResetFormProps> = ({ onInitiateSuccess
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="w-full max-w-md mx-auto p-6  rounded space-y-6 bg-white text-black">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="w-full max-w-md mx-auto p-6  rounded space-y-6 bg-white text-black"
+    >
       <h2 className="text-2xl font-semibold text-black">Reset Password</h2>
       <div>
-        <label htmlFor="email" className="block mb-1 font-medium text-black">Email</label>
-        <Input id="email" type="email" {...register('email', { required: 'Email is required' })} className="border-black focus:ring-red-500" />
-        {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email.message}</p>}
+        <label htmlFor="email" className="block mb-1 font-medium text-black">
+          Email
+        </label>
+        <Input
+          id="email"
+          type="email"
+          {...register("email", { required: "Email is required" })}
+          className="border-black  py-6 focus:ring-red-500"
+        />
+        {errors.email && (
+          <p className="text-red-600 text-sm mt-1">{errors.email.message}</p>
+        )}
       </div>
-      <Button type="submit" disabled={isSubmitting} className="w-full bg-red-700 hover:bg-red-800 focus:ring-red-500">
-        {isSubmitting ? 'Sending...' : 'Send Reset Email'}
+      <Button
+        type="submit"
+        disabled={isSubmitting}
+        className="w-full bg-red-700 hover:bg-red-800 focus:ring-red-500  py-6"
+      >
+        {isSubmitting ? "Sending..." : "Send Reset Email"}
       </Button>
     </form>
   );

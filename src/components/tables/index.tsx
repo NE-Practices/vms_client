@@ -65,7 +65,7 @@ function DataTable<T>({ data, columns,onEdit,onDelete,role,tableType }: TablePro
           placeholder="Search..."
           value={globalFilter ?? ""}
           onChange={(e) => {
-            const sanitized = e.target.value.replace(/\s+/g, " ").trim(); 
+            const sanitized = e.target.value.replace(/\s+/g, " ").trim();
             if (sanitized !== "") {
               setGlobalFilter(sanitized.toLowerCase());
             } else {
@@ -77,7 +77,7 @@ function DataTable<T>({ data, columns,onEdit,onDelete,role,tableType }: TablePro
       </div>
 
       {/* Table */}
-      <div className="overflow-x-auto rounded-lg shadow-md border border-gray-200">
+      <div className="overflow-x-auto  rounded-lg shadow-md border border-gray-200">
         <table className="min-w-full divide-y divide-gray-200 text-sm text-gray-800">
           <thead className="bg-gray-100 uppercase text-xs font-semibold text-gray-600">
             {table.getHeaderGroups().map((headerGroup) => (
@@ -130,7 +130,7 @@ function DataTable<T>({ data, columns,onEdit,onDelete,role,tableType }: TablePro
                     </button>
 
                     {openRowId === row.id && (
-                      <div className="absolute right-5 top-10 z-50 w-36 bg-white shadow-lg border rounded-md">
+                      <div className="absolute top-10 z-50 w-36 bg-white shadow-lg border rounded-md">
                         {onEdit && (
                           <button
                             className="w-full flex items-center px-4 py-2 hover:bg-gray-100 text-sm"
@@ -169,7 +169,8 @@ function DataTable<T>({ data, columns,onEdit,onDelete,role,tableType }: TablePro
       </div>
 
       {/* Pagination */}
-      <div className="flex items-center justify-between text-sm text-gray-600">
+      <div className="flex items-center justify-between text-sm text-gray-600 mt-4">
+        {/* Rows per page */}
         <div className="flex items-center gap-2">
           <label htmlFor="pageSize" className="text-sm">
             Rows per page:
@@ -179,7 +180,7 @@ function DataTable<T>({ data, columns,onEdit,onDelete,role,tableType }: TablePro
             value={pageSize}
             onChange={(e) => {
               setPageSize(Number(e.target.value));
-              setPageIndex(0); // reset to first page
+              setPageIndex(0); // Reset to first page on page size change
             }}
             className="border px-2 py-1 rounded-md text-sm"
           >
@@ -191,13 +192,38 @@ function DataTable<T>({ data, columns,onEdit,onDelete,role,tableType }: TablePro
           </select>
         </div>
 
-        <span>
-          Page{" "}
-          <strong>
-            {table.getState().pagination.pageIndex + 1} of{" "}
-            {table.getPageCount()}
-          </strong>
-        </span>
+        {/* Page indicator and navigation */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setPageIndex((prev) => Math.max(prev - 1, 0))}
+            disabled={table.getState().pagination.pageIndex === 0}
+            className="px-2 py-1 border rounded disabled:opacity-50"
+          >
+            Previous
+          </button>
+
+          <span>
+            Page{" "}
+            <strong>
+              {table.getState().pagination.pageIndex + 1} of{" "}
+              {table.getPageCount()}
+            </strong>
+          </span>
+
+          <button
+            onClick={() =>
+              setPageIndex((prev) =>
+                Math.min(prev + 1, table.getPageCount() - 1)
+              )
+            }
+            disabled={
+              table.getState().pagination.pageIndex >= table.getPageCount() - 1
+            }
+            className="px-2 py-1 border rounded disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
       </div>
 
       {rowToDelete && (

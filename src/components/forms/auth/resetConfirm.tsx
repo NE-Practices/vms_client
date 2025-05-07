@@ -119,12 +119,12 @@ const ResetConfirmForm: React.FC<ResetConfirmFormProps> = ({
           id="password"
           type={showPassword ? "text" : "password"}
           {...register("password", { required: "Password is required" })}
-          className="border-black pr-10"
+          className="border-black pr-10  py-6"
         />
         <button
           type="button"
           onClick={togglePasswordVisibility}
-          className="absolute right-3 top-9 text-gray-500"
+          className="absolute right-3 top-11 text-gray-500"
           tabIndex={-1}
         >
           {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -147,12 +147,12 @@ const ResetConfirmForm: React.FC<ResetConfirmFormProps> = ({
           {...register("confirmPassword", {
             required: "Confirm password is required",
           })}
-          className="border-black pr-10"
+          className="border-black pr-10  py-6"
         />
         <button
           type="button"
           onClick={togglePasswordVisibility}
-          className="absolute right-3 top-9 text-gray-500"
+          className="absolute right-3 top-11 text-gray-500"
           tabIndex={-1}
         >
           {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -167,7 +167,7 @@ const ResetConfirmForm: React.FC<ResetConfirmFormProps> = ({
       <Button
         type="submit"
         disabled={isSubmitting}
-        className="w-full bg-red-600 hover:bg-red-700"
+        className="w-full bg-red-600 hover:bg-red-700 py-6"
       >
         {isSubmitting ? "Resetting..." : "Reset Password"}
       </Button>
