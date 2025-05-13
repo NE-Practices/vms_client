@@ -20,7 +20,8 @@ const Sidebar: React.FC = () => {
       path: "/dashboard/vehicleModels",
       roles: ["ADMIN"],
     },
-    { name: "Actions", path: "/dashboard/actions", roles: ["ADMIN", "USER"] },
+    { name: "Requests", path: "/dashboard/requests", roles: ["ADMIN"] },
+    { name: "Action", path: "/dashboard/actions", roles: ["ADMIN", "USER"] },
   ];
 
   const confirmLogout = () => {

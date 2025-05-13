@@ -80,8 +80,37 @@ export const actionColumns = (
     cell:(info)=>info.getValue(),
   },
   {
-    accessorKey:"user.telephone",
+    accessorKey:"user.phone",
     header:"Phone number",
     cell:(info)=>info.getValue(),
+  },
+];
+
+
+export const requestColumns = (): ColumnDef<Request>[] => [
+  {
+  accessorKey: "user.names",
+    header:"User Names",
+    cell: (info) => info.getValue(),
+  },
+  {
+  accessorKey: "user.email",
+    header:"Email",
+    cell: (info) => info.getValue(),
+  },
+  {
+    accessorKey: "vehicle.plateNumber",
+    header: "Vehicle plateNumber",
+    cell: (info) => info.getValue(),
+  },
+  {
+    accessorKey: "actionType",
+    header: "Action Type",
+    cell: (info) => info.getValue(),
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: (info) => info.getValue(),
   },
 ];

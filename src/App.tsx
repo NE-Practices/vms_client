@@ -17,6 +17,7 @@ import VehicleModelPage from "./pages/vehicleModel";
 import ActionsPage from "./pages/actions";
 import NotFoundPage from "./pages/404";
 import UnauthorizedPage from "./pages/404/unauthorized";
+import RequestsPage from "./pages/requests";
 
 const PrivateRoute: React.FC<{
   children: ReactElement;
@@ -89,6 +90,14 @@ const App: React.FC = () => {
             element={
               <PrivateRoute allowedRoles={["ADMIN", "USER"]}>
                 <VehiclePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="requests"
+            element={
+              <PrivateRoute allowedRoles={["ADMIN"]}>
+                <RequestsPage />
               </PrivateRoute>
             }
           />

@@ -13,6 +13,7 @@ import {
   Trash2,
 } from "lucide-react";
 import DeleteConfirmModal from "../modals/common/DeleteConfirmModal";
+import { approveVehicleRequest } from "../../services/vehiclesService";
 
 interface TableProps<T> {
   data: T[];
@@ -20,7 +21,7 @@ interface TableProps<T> {
   onEdit?: (row: T) => void;
   onDelete?: (row: T) => void;
   role?: "admin" | "user";
-  tableType?: "vehicle" | "vehicleModel" | "action";
+  tableType?: "vehicle" | "vehicleModel" | "action" | "request";
 }
 
 function DataTable<T>({ data, columns,onEdit,onDelete,role,tableType }: TableProps<T>) {
@@ -55,6 +56,14 @@ function DataTable<T>({ data, columns,onEdit,onDelete,role,tableType }: TablePro
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
+
+  const approveRequest = async (requestId: string) => {
+    try {
+      await approveVehicleRequest(requestId);
+    } catch (error) {
+      console.error("Error approving request:", error);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -115,7 +124,9 @@ function DataTable<T>({ data, columns,onEdit,onDelete,role,tableType }: TablePro
                 ))}
 
                 {((role === "admin" &&
-                  (tableType === "vehicle" || tableType === "vehicleModel")) ||
+                  (tableType === "vehicle" ||
+                    tableType === "vehicleModel" ||
+                    tableType === "request")) ||
                   (role === "user" && tableType === "action")) && (
                   <td className="px-5 py-4 relative">
                     <button
@@ -144,6 +155,21 @@ function DataTable<T>({ data, columns,onEdit,onDelete,role,tableType }: TablePro
                             Edit
                           </button>
                         )}
+
+                        {tableType === "request" && role === "admin" && (
+                          <button
+                            className="w-full flex items-center px-4 py-2 hover:bg-gray-100 text-sm "
+                            onClick={() => {
+                              setOpenRowId(null);
+                              const requestData = row.original as {
+                                id: string}; 
+                              approveRequest(requestData.id); 
+                            }}
+                          >
+                            Approve
+                          </button>
+                        )}
+
                         {onDelete && (
                           <button
                             className="w-full flex items-center px-4 py-2 hover:bg-gray-100 text-sm text-red-600"

@@ -38,6 +38,7 @@ export async function getAllActions() {
   }
 }
 
+
 export async function createAction(data: Partial<Action>) {
   try {
     const response = await axios.post(API_ENDPOINTS.actions.makeAction, data, {

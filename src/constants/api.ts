@@ -22,6 +22,9 @@ export const API_ENDPOINTS = {
     editOne: (id: string) => `${API_BASE_URL}/vehicles/${id}`,
     delete: (id: string) => `${API_BASE_URL}/vehicles/${id}`,
     search: `${API_BASE_URL}/vehicles/search`,
+    getAllRequests: `${API_BASE_URL}/vehicles/allReq`,
+    approveRequest: (id: string) =>
+      `${API_BASE_URL}/vehicles/approve/${id}`,
   },
   vehicleModels: {
     addOne: `${API_BASE_URL}/vehicle-models`,

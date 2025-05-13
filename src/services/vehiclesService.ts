@@ -9,6 +9,14 @@ export interface Vehicle {
   modelId: string;
   isAvailable: boolean;
 }
+export interface Request {
+  id: string;
+  userId: string;
+  vehicleId: string;
+  actionType: string;
+  status: string;
+}
+
 
 export interface PaginatedResponse<T> {
   data: T[];
@@ -120,20 +128,44 @@ export async function deleteVehicle(id: string) {
   }
 }
 
-export async function getVehicleStats() {
+export async function getAllVehicleRequests() {
   try {
-    const response = await axios.get("/api/vehicles/stats", {
+    const response = await axios.get(API_ENDPOINTS.vehicles.getAllRequests, {
       headers: {
         Authorization: localStorage.getItem("token"),
       },
     });
-    toast.success("Vehicle stats loaded successfully!");
+    toast.success("Requests loaded successfully!");
+    console.log("Requestsss data-->", response.data);
     return response.data;
-  } catch (error) {
+  } catch (error: unknown) {
     const errorMessage =
       axios.isAxiosError(error) && error.response?.data?.message
         ? error.response.data.message
-        : "Failed to load vehicle stats!";
+        : "Failed to load actions!";
+    toast.error(errorMessage);
+    console.log("Error get all actions --->", errorMessage);
+    throw error;
+  }
+}
+
+export async function approveVehicleRequest(id: string) {
+  try {
+    const response = await axios.put(
+      `${API_ENDPOINTS.vehicles.approveRequest(id)}`,{},
+      {
+        headers:{
+          Authorization: localStorage.getItem("token"),
+        }
+      }
+    );
+    toast.success(response.data.message || "Request approved successfully!");
+    return response.data;
+  } catch (error: unknown) {
+    const errorMessage =
+      axios.isAxiosError(error) && error.response?.data?.message
+        ? error.response.data.message
+        : "Failed to approve request!";
     toast.error(errorMessage);
     throw error; 
   }
