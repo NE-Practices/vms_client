@@ -1,6 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { ColumnDef } from "@tanstack/react-table";
-import { Action } from "@/services/actionService";
 
+
+export interface User {
+  id: string;
+  names: string;
+  phone: string;
+  email: string;
+}
 export interface VehicleModel {
   id: string;
   name: string;
@@ -14,6 +21,23 @@ export interface Vehicle {
   modelName: string;
   modelId:string;
   isAvailable: boolean;
+}
+
+export interface Action {
+  id: string;
+  userId: string;
+  vehicleId: string;
+  actionType: string;
+  user?: User;
+  vehicle?: Vehicle;
+}
+export interface Requests {
+  id: string;
+  userId: string;
+  vehicleId: string;
+  actionType: string;
+  user?: User;
+  vehicle?: Vehicle;
 }
 
 export const vehicleModelColumns = (
@@ -65,52 +89,53 @@ export const actionColumns = (
   onEdit: (action: Action) => void
 ): ColumnDef<Action>[] => [
   {
-    accessorKey: "vehicle.plateNumber",
-    header: "Vehicle plateNumber",
+    header: "Vehicle Plate Number",
+    accessorFn: (row) => row.vehicle?.plateNumber,
     cell: (info) => info.getValue(),
   },
   {
-    accessorKey: "actionType",
     header: "User Action Type",
+    accessorKey: "actionType",
     cell: (info) => info.getValue(),
   },
   {
-    accessorKey:"user.names",
-    header:"User Name",
-    cell:(info)=>info.getValue(),
+    header: "User Name",
+    accessorFn: (row) => row.user?.names,
+    cell: (info) => info.getValue(),
   },
   {
-    accessorKey:"user.phone",
-    header:"Phone number",
-    cell:(info)=>info.getValue(),
+    header: "Phone Number",
+    accessorFn: (row) => row.user?.phone,
+    cell: (info) => info.getValue(),
   },
 ];
 
 
-export const requestColumns = (): ColumnDef<Request>[] => [
+
+export const requestColumns = (): ColumnDef<Requests>[] => [
   {
-  accessorKey: "user.names",
-    header:"User Names",
+    header: "User Names",
+    accessorFn: (row) => row.user?.names,
     cell: (info) => info.getValue(),
   },
   {
-  accessorKey: "user.email",
-    header:"Email",
+    header: "Email",
+    accessorFn: (row) => row.user?.email,
     cell: (info) => info.getValue(),
   },
   {
-    accessorKey: "vehicle.plateNumber",
-    header: "Vehicle plateNumber",
+    header: "Vehicle Plate Number",
+    accessorFn: (row) => row.vehicle?.plateNumber,
     cell: (info) => info.getValue(),
   },
   {
-    accessorKey: "actionType",
     header: "Action Type",
+    accessorKey: "actionType",
     cell: (info) => info.getValue(),
   },
   {
-    accessorKey: "status",
     header: "Status",
+    accessorKey: "status",
     cell: (info) => info.getValue(),
   },
 ];

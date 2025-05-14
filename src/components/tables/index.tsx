@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import DeleteConfirmModal from "../modals/common/DeleteConfirmModal";
 import { approveVehicleRequest } from "../../services/vehiclesService";
+import { exportToCSV } from "../../utils/exportCsv";
 
 interface TableProps<T> {
   data: T[];
@@ -75,14 +76,17 @@ function DataTable<T>({ data, columns,onEdit,onDelete,role,tableType }: TablePro
           value={globalFilter ?? ""}
           onChange={(e) => {
             const sanitized = e.target.value.replace(/\s+/g, " ").trim();
-            if (sanitized !== "") {
-              setGlobalFilter(sanitized.toLowerCase());
-            } else {
-              setGlobalFilter("");
-            }
+            setGlobalFilter(sanitized.toLowerCase() || "");
           }}
           className="w-72 px-4 py-2 rounded-md border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
+
+        <button
+          onClick={() => exportToCSV(data, columns)}
+          className="ml-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
+        >
+          Export CSV
+        </button>
       </div>
 
       {/* Table */}
@@ -162,8 +166,9 @@ function DataTable<T>({ data, columns,onEdit,onDelete,role,tableType }: TablePro
                             onClick={() => {
                               setOpenRowId(null);
                               const requestData = row.original as {
-                                id: string}; 
-                              approveRequest(requestData.id); 
+                                id: string;
+                              };
+                              approveRequest(requestData.id);
                             }}
                           >
                             Approve

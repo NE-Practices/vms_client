@@ -53,6 +53,14 @@ const App: React.FC = () => {
   return (
     <Router>
       <Routes>
+        <Route
+          path="/"
+          element={
+            <PublicRoute>
+              <Navigate to="/auth/login" replace />
+            </PublicRoute>
+          }
+        />
         {/* Auth routes */}
         <Route
           path="/auth/*"

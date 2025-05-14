@@ -1,13 +1,8 @@
 import axios from "axios";
 import API_ENDPOINTS from "../constants/api";
 import { toast } from "sonner";
+import { Action } from "@/components/tables/columns";
 
-export interface Action {
-  id: string;
-  userId:string;
-  vehicleId: string;
-  actionType: string;
-}
 
 export interface PaginatedResponse<T> {
   data: T[];
