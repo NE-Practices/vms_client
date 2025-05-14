@@ -15,6 +15,7 @@ import {
 import DeleteConfirmModal from "../modals/common/DeleteConfirmModal";
 import { approveVehicleRequest } from "../../services/vehiclesService";
 import { exportToCSV } from "../../utils/exportCsv";
+import { Button } from "../ui/button";
 
 interface TableProps<T> {
   data: T[];
@@ -81,12 +82,13 @@ function DataTable<T>({ data, columns,onEdit,onDelete,role,tableType }: TablePro
           className="w-72 px-4 py-2 rounded-md border border-gray-300 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
 
-        <button
+        <Button
           onClick={() => exportToCSV(data, columns)}
-          className="ml-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
+          variant={"outline"}
+          // className="ml-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
         >
           Export CSV
-        </button>
+        </Button>
       </div>
 
       {/* Table */}

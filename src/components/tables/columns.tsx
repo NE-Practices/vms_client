@@ -21,6 +21,7 @@ export interface Vehicle {
   modelName: string;
   modelId:string;
   isAvailable: boolean;
+  model?: VehicleModel;
 }
 
 export interface Action {
@@ -73,8 +74,9 @@ export const vehicleColumns = (
     header: "Color",
   },
   {
-    accessorKey: "model.name",
-    header: "Model",
+    header: "Model Name",
+    accessorFn: (row) => row.model?.name,
+    cell: (info) => info.getValue(),
   },
   {
     accessorKey: "isAvailable",
